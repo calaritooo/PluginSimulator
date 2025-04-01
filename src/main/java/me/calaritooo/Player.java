@@ -4,12 +4,13 @@ import java.util.HashMap;
 
 public class Player {
 
-    // New Player //
+    // Class fields //
     String name;
     int maxHealth;
     int health;
     HashMap<String, Integer> inventory;
 
+    // Constructor //
     public Player(String name) {
         this.name = name;
         this.maxHealth = 100;
@@ -119,5 +120,19 @@ public class Player {
             }
         }
         return player;
+    }
+    public static void listPlayers(HashMap<String, Player> players) {
+        if (players.isEmpty()) {
+            System.out.println("There are no players saved.");
+        } else {
+            System.out.println("Player list: ");
+            int index = 1;
+            for (Player player : players.values()) {
+                System.out.println(index + ". " + player.getName() + " >");
+                System.out.println("  - Health: " + player.getHealth() + "/" + player.getMaxHealth());
+                System.out.println("  - Inventory: " + (player.getInventory().isEmpty() ? "empty" : player.getInventory().toString()));
+                index++;
+            }
+        }
     }
 }
