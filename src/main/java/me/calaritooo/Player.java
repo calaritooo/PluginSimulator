@@ -33,19 +33,20 @@ public class Player {
         return inventory;
     }
 
-    public void displayInventory() {
-        System.out.println(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
+    public String displayInventory() {
+        return getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString());
     }
 
     // Base Detail Setters //
     public void setName(String name) {
         this.name = name;
     }
-    public void setHealth(int health) {
+    public String setHealth(int health) {
         if (health >= 0 && health <= this.maxHealth) {
             this.health = health;
+            return "Player " + getName() + "'s health set to " + health;
         } else {
-            System.out.println("Invalid health value. Valid values are 0 to " + maxHealth + ".");
+            return "Invalid health value. Valid values are 0 to " + maxHealth + ".";
         }
     }
     public void setMaxHealth(int maxHealth) {
@@ -56,30 +57,32 @@ public class Player {
     }
 
     // Player actions //
-    public void heal(int quantity){
+    public String heal(int quantity){
         this.health = Math.min(this.health + quantity, this.maxHealth);
+        return "";
     }
-    public void hurt(int quantity){
+    public String hurt(int quantity){
         this.health = Math.max(this.health - quantity, 0);
-        if (this.health == 0) {
-            System.out.println("Player " + this.name + " died!");
-        }
+        return this.health == 0 ? "Player" + this.name + " died!" : "";
     }
 
     // Inventory Methods //
-    public void addPlayerItem(String item, int quantity) {
+    public String addPlayerItem(String item, int quantity) {
         inventory.put(item, inventory.getOrDefault(item, 0) + quantity);
+        return "";
     }
-    public void removePlayerItem(String item, int quantity) {
+    public String removePlayerItem(String item, int quantity) {
         if (inventory.containsKey(item)) {
             int currentQuantity = inventory.get(item);
             if (currentQuantity > quantity) {
                 inventory.put(item, currentQuantity - quantity);
+                return "";
             } else {
                 inventory.remove(item);
+                return "";
             }
         } else {
-            System.out.println("Item not found in inventory.");
+            return "Item not found in inventory.";
         }
     }
     public void clearInventory() {
@@ -87,10 +90,10 @@ public class Player {
     }
 
     // Display Player Details //
-    public void displayStats() {
-        System.out.println("Player: " + name);
-        System.out.println("Health: " + health + "/" + maxHealth);
-        System.out.println("Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString()));
+    public String getStats() {
+        return "Player: " + name + "\n" +
+                "Health: " + health + "/" + maxHealth + "\n" +
+                "Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString());
     }
 
     // Player Data Handlers //
@@ -121,18 +124,18 @@ public class Player {
         }
         return player;
     }
-    public static void listPlayers(HashMap<String, Player> players) {
+    public static String listPlayersAsString(HashMap<String, Player> players) {
         if (players.isEmpty()) {
-            System.out.println("There are no players saved.");
+            return "There are no players saved.";
         } else {
-            System.out.println("Player list: ");
+            StringBuilder sb = new StringBuilder("Player list: \n");
             int index = 1;
             for (Player player : players.values()) {
-                System.out.println(index + ". " + player.getName() + " >");
-                System.out.println("  - Health: " + player.getHealth() + "/" + player.getMaxHealth());
-                System.out.println("  - Inventory: " + (player.getInventory().isEmpty() ? "empty" : player.getInventory().toString()));
-                index++;
+                sb.append(index++).append(". ").append(player.getName()).append(" >\n");
+                sb.append("  - Health: ").append(player.getHealth()).append("/").append(player.getMaxHealth()).append("\n");
+                sb.append("  - Inventory: ").append(player.getInventory().isEmpty() ? "empty" : player.getInventory().toString()).append("\n");
             }
+            return sb.toString();
         }
     }
 }

@@ -13,16 +13,17 @@ public class Main {
         // Load existing players
         loadPlayersFromFile();
 
-        // Get current player
+        // Get current player //
         String playerName = JOptionPane.showInputDialog("Enter player name: ");
         if (playerName == null || playerName.isEmpty()) {
             System.exit(0);
         }
 
-        // Create player object, either getting a current one by name or creating one
+        // Create player object, either getting a current one by name or creating one //
         Player player = players.getOrDefault(playerName, new Player(playerName));
         players.put(playerName, player);
 
+        // Begin simulation on safe thread //
         Runtime.getRuntime().addShutdownHook(new Thread(() -> savePlayersToFile()));
 
         SwingUtilities.invokeLater(() -> new SimulatorGui(player, players));

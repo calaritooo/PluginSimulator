@@ -52,21 +52,21 @@ public class SimulatorGui {
         // Command handler
         switch (arguments[0]) {
             case "/help":
-                System.out.println("Available commands:");
-                System.out.println("/help");
-                System.out.println("/players");
-                System.out.println("/stats <max_health/health> set <value>");
-                System.out.println("/inv <give/take/clear> <item> <qty>");
-                System.out.println("/heal <qty>");
-                System.out.println("/hurt <qty>");
-                System.out.println("/exit");
+                appendOutput("Available commands:");
+                appendOutput("/help");
+                appendOutput("/players");
+                appendOutput("/stats <max_health/health> set <value>");
+                appendOutput("/inv <give/take/clear> <item> <qty>");
+                appendOutput("/heal <qty>");
+                appendOutput("/hurt <qty>");
+                appendOutput("/exit");
                 break;
             case "/players":
-                Player.listPlayers(players);
+                appendOutput(Player.listPlayersAsString(players));
                 break;
             case "/stats":
                 if (arguments.length == 1) {
-                    player.displayStats();
+                    appendOutput(player.getStats());
                 } else if (arguments.length == 4 && arguments[2].equals("set")) {
                     try {
                         String stat = arguments[1];
@@ -74,21 +74,21 @@ public class SimulatorGui {
                         switch (stat) {
                             case "max_health":
                                 player.setMaxHealth(value);
-                                System.out.println("Max health set to " + value + ".");
+                                appendOutput("Max health set to " + value + ".");
                                 break;
                             case "health":
                                 player.setHealth(value);
-                                System.out.println("Health set to " + value + ".");
+                                appendOutput("Health set to " + value + ".");
                                 break;
                             default:
-                                System.out.println("Unknown stat: " + stat);
+                                appendOutput("Unknown stat: " + stat);
                                 break;
                         }
                     } catch (NumberFormatException e) {
-                        System.out.println("Invalid value: " + arguments[1]);
+                        appendOutput("Invalid value: " + arguments[1]);
                     }
                 } else {
-                    System.out.println("Usage: /stats <max_health/health> set <value>");
+                    appendOutput("Usage: /stats <max_health/health> set <value>");
                 }
                 break;
             case "/inv":
@@ -99,12 +99,12 @@ public class SimulatorGui {
                             int quantity = Integer.parseInt(arguments[3]);
                             player.addPlayerItem(item, quantity);
                             if (quantity > 1) {
-                                System.out.println(quantity + " " + item + "s added to " + playerName + "'s inventory.");
+                                appendOutput(quantity + " " + item + "s added to " + playerName + "'s inventory.");
                             } else {
-                                System.out.println(quantity + " " + item + " added to " + playerName + "'s inventory.");
+                                appendOutput(quantity + " " + item + " added to " + playerName + "'s inventory.");
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Invalid quantity.");
+                            appendOutput("Invalid quantity.");
                         }
                     } else if (arguments[1].equalsIgnoreCase("take")) {
                         try {
@@ -112,35 +112,35 @@ public class SimulatorGui {
                             int quantity = Integer.parseInt(arguments[3]);
                             player.removePlayerItem(item, quantity);
                             if (quantity > 1) {
-                                System.out.println(quantity + " " + item + "s removed from " + playerName + "'s inventory.");
+                                appendOutput(quantity + " " + item + "s removed from " + playerName + "'s inventory.");
                             } else {
-                                System.out.println(quantity + " " + item + " removed from " + playerName + "'s inventory.");
+                                appendOutput(quantity + " " + item + " removed from " + playerName + "'s inventory.");
                             }
                         } catch (NumberFormatException e) {
-                            System.out.println("Invalid quantity.");
+                            appendOutput("Invalid quantity.");
                         }
                     }
                 } else if (arguments.length == 2 && arguments[1].equalsIgnoreCase("clear")) {
                     player.clearInventory();
-                    System.out.println("Inventory cleared.");
+                    appendOutput("Inventory cleared.");
                 } else if (arguments.length == 1) {
                     player.displayInventory();
                 } else {
-                    System.out.println("Usage: /inv <give/take/clear> <item> <quantity>");
+                    appendOutput("Usage: /inv <give/take/clear> <item> <quantity>");
                 }
                 break;
             case "/heal":
                 if (arguments.length == 2) {
                     player.heal(Integer.parseInt(arguments[1]));
                 } else {
-                    System.out.println("Usage: /heal <quantity>");
+                    appendOutput("Usage: /heal <quantity>");
                 }
                 break;
             case "/hurt":
                 if (arguments.length == 2) {
                     player.hurt(Integer.parseInt(arguments[1]));
                 } else {
-                    System.out.println("Usage: /hurt <quantity>");
+                    appendOutput("Usage: /hurt <quantity>");
                 }
                 break;
             case "/exit":
@@ -148,7 +148,7 @@ public class SimulatorGui {
                 System.exit(0);
                 break;
             default:
-                System.out.println("Unknown command: " + arguments[0]);
+                appendOutput("Unknown command: " + arguments[0]);
                 break;
         }
     }
