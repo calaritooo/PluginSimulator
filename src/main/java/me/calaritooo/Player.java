@@ -57,11 +57,17 @@ public class Player {
     }
 
     // Player actions //
-    public String heal(int quantity){
+    public String onJoin(Player player) {
+        return "[SERVER] Player " + getName() + " joined the game!";
+    }
+    public String onChat(Player player, String message) {
+        return "[CHAT] " + getName() + ": " + message;
+    }
+    public String heal(int quantity) {
         this.health = Math.min(this.health + quantity, this.maxHealth);
         return "";
     }
-    public String hurt(int quantity){
+    public String hurt(int quantity) {
         this.health = Math.max(this.health - quantity, 0);
         return this.health == 0 ? "Player" + this.name + " died!" : "";
     }

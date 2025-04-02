@@ -19,6 +19,7 @@ public class SimulatorGui {
         createGUI();
     }
 
+    // GUI layout
     private void createGUI() {
         frame = new JFrame("Plugin Simulator");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -29,22 +30,32 @@ public class SimulatorGui {
         JScrollPane scrollPane = new JScrollPane(outputArea);
 
         inputField = new JTextField();
-        inputField.addActionListener(e -> handleCommand(inputField.getText()));
+        inputField.addActionListener(e -> handleInput(inputField.getText()));
 
         frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
         frame.getContentPane().add(inputField, BorderLayout.SOUTH);
 
         frame.setVisible(true);
-        appendOutput("Welcome " + player.getName() + "! >");
+        appendOutput(player.onJoin(player));
     }
 
+    // Message output
     private void appendOutput(String message) {
         outputArea.append(message + "\n");
     }
 
-    private void handleCommand(String input) {
+    private void handleInput(String input) {
         inputField.setText("");
         appendOutput("> " + input);
+        if (input.charAt(0) == '/') {
+            handleCommand(input);
+        } else {
+            appendOutput(player.onChat(player, input));
+        }
+    }
+
+    // Command handler
+    private void handleCommand(String input) {
         String playerName = player.getName();
 
         String[] arguments = input.trim().toLowerCase().split(" ");
