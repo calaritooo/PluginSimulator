@@ -24,11 +24,11 @@ public class CommandHandler {
         String[] args = input.split(" ");
         String commandName = args[0].toLowerCase();
         Command command = commandMap.get(commandName.toLowerCase());
-        if (command != null) {return command.execute(player, args);} else {return "Unknown command: " + args[0];}
+        if (command != null) {return "\n" + command.execute(player, args);} else {return "Unknown command: " + args[0];}
     }
 
     public String getHelp() {
-        StringBuilder help = new StringBuilder("Available commands:\n");
+        StringBuilder help = new StringBuilder("\nAvailable commands:\n");
 
         List<Command> sortedCommands = new ArrayList<>(commandMap.values());
         sortedCommands.sort(Comparator.comparing(Command::getName));

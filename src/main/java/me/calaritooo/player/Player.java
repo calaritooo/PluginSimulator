@@ -1,5 +1,6 @@
 package me.calaritooo.player;
 
+
 import java.util.HashMap;
 
 public class Player {
@@ -10,13 +11,15 @@ public class Player {
     int health;
     HashMap<String, Integer> inventory;
 
-    // Constructor //
+    // Constructors //
     public Player(String name) {
         this.name = name;
         this.maxHealth = 100;
         this.health = 100;
         this.inventory = new HashMap<>();
     }
+    // For GSON
+    public Player() {}
 
     // Getters //
     public String getName() {
