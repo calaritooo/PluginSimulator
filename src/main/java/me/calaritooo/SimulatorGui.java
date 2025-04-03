@@ -46,8 +46,8 @@ public class SimulatorGui {
 
     private void handleInput(String input) {
         inputField.setText("");
-        appendOutput("> " + input);
         if (input.charAt(0) == '/') {
+            appendOutput("> " + input);
             handleCommand(input);
         } else {
             appendOutput(player.onChat(player, input));

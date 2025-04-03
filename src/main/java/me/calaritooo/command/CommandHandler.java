@@ -2,8 +2,7 @@ package me.calaritooo.command;
 
 import me.calaritooo.player.Player;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class CommandHandler {
 
@@ -30,7 +29,11 @@ public class CommandHandler {
 
     public String getHelp() {
         StringBuilder help = new StringBuilder("Available commands:\n");
-        for (Command command : commandMap.values()) {
+
+        List<Command> sortedCommands = new ArrayList<>(commandMap.values());
+        sortedCommands.sort(Comparator.comparing(Command::getName));
+
+        for (Command command : sortedCommands) {
             help.append(command.getName()).append(" - ").append(command.getDescription()).append("\n   - ")
                     .append(command.getUsage()).append("\n");
         }
