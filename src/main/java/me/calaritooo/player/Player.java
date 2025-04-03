@@ -1,4 +1,4 @@
-package me.calaritooo;
+package me.calaritooo.player;
 
 import java.util.HashMap;
 
@@ -129,19 +129,5 @@ public class Player {
             }
         }
         return player;
-    }
-    public static String listPlayersAsString(HashMap<String, Player> players) {
-        if (players.isEmpty()) {
-            return "There are no players saved.";
-        } else {
-            StringBuilder sb = new StringBuilder("Player list: \n");
-            int index = 1;
-            for (Player player : players.values()) {
-                sb.append(index++).append(". ").append(player.getName()).append(" >\n");
-                sb.append("  - Health: ").append(player.getHealth()).append("/").append(player.getMaxHealth()).append("\n");
-                sb.append("  - Inventory: ").append(player.getInventory().isEmpty() ? "empty" : player.getInventory().toString()).append("\n");
-            }
-            return sb.toString();
-        }
     }
 }

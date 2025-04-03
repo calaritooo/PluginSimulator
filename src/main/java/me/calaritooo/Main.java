@@ -1,12 +1,14 @@
 package me.calaritooo;
 
+import me.calaritooo.player.Player;
+import me.calaritooo.player.PlayerManager;
+
 import javax.swing.*;
 import java.io.*;
-import java.util.HashMap;
 
 public class Main {
+
     private static final String FILE_NAME = "players.txt";
-    private static HashMap<String, Player> players = new HashMap<>();
 
     public static void main(String[] args) {
 
@@ -18,23 +20,20 @@ public class Main {
         if (playerName == null || playerName.isEmpty()) {
             System.exit(0);
         }
+        Player player = PlayerManager.getOrCreate(playerName);
 
-        // Create player object, either getting a current one by name or creating one //
-        Player player = players.getOrDefault(playerName, new Player(playerName));
-        players.put(playerName, player);
-
-        // Begin simulation on safe thread //
+        // Save on shutdown //
         Runtime.getRuntime().addShutdownHook(new Thread(() -> savePlayersToFile()));
 
-        SwingUtilities.invokeLater(() -> new SimulatorGui(player, players));
+        // Start GUI on EDT //
+        SwingUtilities.invokeLater(() -> new SimulatorGui(player));
 
     }
 
     // File Handling //
-
     private static void savePlayersToFile() {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_NAME))) {
-            for (Player player : players.values()) {
+            for (Player player : PlayerManager.list()) {
                 writer.write(player.toSaveString());
                 writer.newLine();
             }
@@ -46,12 +45,13 @@ public class Main {
     private static void loadPlayersFromFile() {
         File file = new File(FILE_NAME);
         if (!file.exists()) return;
+
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 Player player = Player.fromSaveString(line);
                 if (player != null) {
-                    players.put(player.getName(), player);
+                    PlayerManager.add(player);
                 }
             }
             System.out.println("Player data loaded.");
