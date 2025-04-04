@@ -1,12 +1,13 @@
 package me.calaritooo;
 
 import me.calaritooo.command.CommandHandler;
+import me.calaritooo.gui.SimulatorIO;
 import me.calaritooo.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
 
-public class SimulatorGui {
+public class SimulatorGui implements SimulatorIO {
 
     private JFrame frame;
     private JTextArea outputArea;
@@ -36,30 +37,31 @@ public class SimulatorGui {
         frame.getContentPane().add(inputField, BorderLayout.SOUTH);
 
         frame.setVisible(true);
-        appendOutput(player.onJoin(player));
+        send(player.onJoin(player));
     }
 
     // Message output
-    private void appendOutput(String message) {
+    @Override
+    public void send(String message) {
         outputArea.append(message + "\n");
     }
 
     private void handleInput(String input) {
         inputField.setText("");
         if (input.charAt(0) == '/') {
-            appendOutput("> " + input);
+            send("> " + input);
             handleCommand(input);
         } else {
-            appendOutput(player.onChat(player, input));
+            send(player.onChat(player, input));
         }
     }
 
     // Command handler
     private void handleCommand(String input) {
         if (input.equalsIgnoreCase("/help")) {
-            appendOutput(commandHandler.getHelp());
+            commandHandler.getHelp(player);
             return;
         }
-        appendOutput(commandHandler.handleCommand(player, input));
+        commandHandler.handleCommand(player, input);
     }
 }

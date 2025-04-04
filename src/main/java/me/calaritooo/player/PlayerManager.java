@@ -2,6 +2,9 @@ package me.calaritooo.player;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import me.calaritooo.event.EventManager;
+import me.calaritooo.event.events.player.*;
+import me.calaritooo.gui.SimulatorIO;
 
 import java.io.*;
 import java.util.Collection;
@@ -12,13 +15,23 @@ public class PlayerManager {
     private static final File PLAYER_FOLDER = new File("players");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final HashMap<String, Player> players = new HashMap<>();
+    private static SimulatorIO io;
 
     // SIMPLE RETURNS
     public static Player get(String playerName) {
         return players.get(playerName.toLowerCase());
     }
-    public static Player getOrCreate(String playerName) { return players.computeIfAbsent(playerName.toLowerCase(), k -> new Player(playerName)); }
-    public static void add(Player player) { players.put(player.getName().toLowerCase(), player); }
+    public static Player getOrCreate(String playerName) {
+        players.computeIfAbsent(playerName.toLowerCase(), k -> new Player(playerName.toLowerCase(), io));
+        if (get(playerName.toLowerCase()).firstTime) {
+            EventManager.onEvent(new PlayerWelcomeEvent(get(playerName.toLowerCase())));
+        }
+        return get(playerName.toLowerCase());
+    }
+    public static void add(Player player) {
+        player.setIO(io);
+        players.put(player.getName().toLowerCase(), player);
+    }
     public static void remove(Player player) { players.remove(player.getName().toLowerCase()); }
     public static boolean isEmpty() { return players.isEmpty(); }
     public static Collection<Player> list() { return players.values(); }
@@ -75,5 +88,9 @@ public class PlayerManager {
             }
         }
         System.out.println("Player data loaded.");
+    }
+
+    public static void setIO(SimulatorIO newIO) {
+        io = newIO;
     }
 }

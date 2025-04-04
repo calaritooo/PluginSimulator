@@ -1,5 +1,7 @@
 package me.calaritooo;
 
+import me.calaritooo.event.EventManager;
+import me.calaritooo.event.listeners.PlayerListener;
 import me.calaritooo.player.Player;
 import me.calaritooo.player.PlayerManager;
 
@@ -8,9 +10,11 @@ import java.io.*;
 
 public class Main {
 
-    private static final String FILE_NAME = "players.txt";
-
     public static void main(String[] args) {
+
+        // Register listeners
+        EventManager.registerListener(new PlayerListener());
+        System.out.println("Event listeners successfully registered");
 
         // Load existing players
         PlayerManager.loadAll();

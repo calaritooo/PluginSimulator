@@ -20,7 +20,7 @@ public class InvCommand implements Command {
     }
     
     @Override
-    public String execute(Player player, String[] args) {
+    public void execute(Player player, String[] args) {
         if (args.length == 4) {
             // give //
             if (args[1].equalsIgnoreCase("give")) {
@@ -29,11 +29,11 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.addPlayerItem(item, quantity);
                     if (quantity > 1) {
-                        return quantity + " " + item + "s added to " + player.getName() + "'s inventory.";
+                        player.send(quantity + " " + item + "s added to " + player.getName() + "'s inventory.");
                     } else {
-                        return quantity + " " + item + " added to " + player.getName() + "'s inventory.";
+                        player.send(quantity + " " + item + " added to " + player.getName() + "'s inventory.");
                     }
-                } catch (NumberFormatException e) { return "Invalid quantity."; }
+                } catch (NumberFormatException e) { player.send("Invalid quantity."); }
 
             // take //
             } else if (args[1].equalsIgnoreCase("take")) {
@@ -42,23 +42,23 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.removePlayerItem(item, quantity);
                     if (quantity > 1) {
-                       return quantity + " " + item + "s removed from " + player.getName() + "'s inventory.";
+                        player.send(quantity + " " + item + "s removed from " + player.getName() + "'s inventory.");
                     } else {
-                        return quantity + " " + item + " removed from " + player.getName() + "'s inventory.";
+                        player.send(quantity + " " + item + " removed from " + player.getName() + "'s inventory.");
                     }
                 } catch (NumberFormatException e) {
-                    return "Invalid quantity.";
+                    player.send("Invalid quantity.");
                 }
-            } else { return getUsage(); }
+            } else { player.send(getUsage()); }
 
         // clear //
         } else if (args.length == 2 && args[1].equalsIgnoreCase("clear")) {
             player.clearInventory();
-            return "Inventory cleared.";
+            player.send("Inventory cleared.");
 
         // view (no args) //
         } else if (args.length == 1) {
-            return player.displayInventory();
-        } else { return getUsage(); }
+            player.displayInventory();
+        } else { player.send(getUsage()); }
     }
 }

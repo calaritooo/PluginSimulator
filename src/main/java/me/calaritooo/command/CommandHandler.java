@@ -20,14 +20,19 @@ public class CommandHandler {
         commandMap.put(command.getName().toLowerCase(), command);
     }
 
-    public String handleCommand(Player player, String input) {
+    public void handleCommand(Player player, String input) {
         String[] args = input.split(" ");
         String commandName = args[0].toLowerCase();
         Command command = commandMap.get(commandName.toLowerCase());
-        if (command != null) {return "\n" + command.execute(player, args);} else {return "Unknown command: " + args[0];}
+        if (command != null) {
+            player.send("\n");
+            command.execute(player, args);
+        } else {
+            player.send("Unknown command: " + args[0]);
+        }
     }
 
-    public String getHelp() {
+    public void getHelp(Player player) {
         StringBuilder help = new StringBuilder("\nAvailable commands:\n");
 
         List<Command> sortedCommands = new ArrayList<>(commandMap.values());
@@ -37,6 +42,6 @@ public class CommandHandler {
             help.append(command.getName()).append(" - ").append(command.getDescription()).append("\n   - ")
                     .append(command.getUsage()).append("\n");
         }
-        return help.toString();
+        player.send(help.toString());
     }
 }

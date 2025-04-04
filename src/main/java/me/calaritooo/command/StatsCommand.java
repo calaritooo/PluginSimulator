@@ -20,30 +20,28 @@ public class StatsCommand implements Command {
     }
     
     @Override
-    public String execute(Player player, String[] args) {
+    public void execute(Player player, String[] args) {
         // View (no args) //
         if (args.length == 1) {
-            return player.getStats();
+            player.getStats();
 
         // set //
         } else if (args.length == 4 && args[2].equals("set")) {
             try {
                 String stat = args[1];
                 int value = Integer.parseInt(args[3]);
-                return switch (stat) {
+                switch (stat) {
                     case "max_health" -> {
                         player.setMaxHealth(value);
-                        yield "Max health set to " + value + ".";
                     }
                     case "health" -> {
                         player.setHealth(value);
-                        yield "Health set to " + value + ".";
                     }
-                    default -> "Unknown stat: " + stat;
+                    default -> player.send("Unknown stat: " + stat);
                 };
             } catch (NumberFormatException e) {
-                return "Invalid value: " + args[1];
+                player.send("Invalid value: " + args[1]);
             }
-        } else { return getUsage(); }
+        } else { player.send(getUsage()); }
     }
 }

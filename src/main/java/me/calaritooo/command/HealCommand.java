@@ -20,7 +20,9 @@ public class HealCommand implements Command {
     }
 
     @Override
-    public String execute(Player player, String[] args) {
-        return args.length == 2 ? player.heal(Integer.parseInt(args[1])) : getUsage();
+    public void execute(Player player, String[] args) {
+        if (args.length == 2) {
+            player.heal(Integer.parseInt(args[1]));
+        } else { player.send(getUsage()); }
     }
 }

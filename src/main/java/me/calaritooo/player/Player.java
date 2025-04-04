@@ -1,29 +1,50 @@
 package me.calaritooo.player;
 
 
+import me.calaritooo.event.EventManager;
+import me.calaritooo.event.events.player.PlayerDeathEvent;
+import me.calaritooo.gui.SimulatorIO;
+
 import java.util.HashMap;
 
 public class Player {
 
     // Class fields //
+    private transient SimulatorIO io;
+
     String name;
     int maxHealth;
     int health;
+    boolean firstTime;
     HashMap<String, Integer> inventory;
 
     // Constructors //
-    public Player(String name) {
+    public Player(String name, SimulatorIO io) {
+        this.io = io;
         this.name = name;
         this.maxHealth = 100;
         this.health = 100;
         this.inventory = new HashMap<>();
+        this.firstTime = true;
     }
     // For GSON
     public Player() {}
 
+    public void setIO(SimulatorIO io) {
+        this.io = io;
+    }
+
+    // Wrap IO send method
+    public void send(String message) {
+        io.send(message);
+    }
+
     // Getters //
     public String getName() {
         return name;
+    }
+    public boolean getFirstTime() {
+        return firstTime;
     }
     public int getMaxHealth() {
         return maxHealth;
@@ -36,20 +57,19 @@ public class Player {
         return inventory;
     }
 
-    public String displayInventory() {
-        return getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString());
+    public void displayInventory() {
+        io.send(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
     }
 
     // Base Detail Setters //
     public void setName(String name) {
         this.name = name;
     }
-    public String setHealth(int health) {
+    public void setHealth(int health) {
         if (health >= 0 && health <= this.maxHealth) {
             this.health = health;
-            return "Player " + getName() + "'s health set to " + health;
         } else {
-            return "Invalid health value. Valid values are 0 to " + maxHealth + ".";
+            io.send("Invalid health value. Valid values are 0 to " + maxHealth + ".");
         }
     }
     public void setMaxHealth(int maxHealth) {
@@ -66,32 +86,29 @@ public class Player {
     public String onChat(Player player, String message) {
         return "[CHAT] " + getName() + ": " + message;
     }
-    public String heal(int quantity) {
+    public void heal(int quantity) {
         this.health = Math.min(this.health + quantity, this.maxHealth);
-        return "";
     }
-    public String hurt(int quantity) {
+    public void hurt(int quantity) {
         this.health = Math.max(this.health - quantity, 0);
-        return this.health == 0 ? "Player" + this.name + " died!" : "";
+        if (this.health == 0) { EventManager.onEvent(new PlayerDeathEvent(this));
+        }
     }
 
     // Inventory Methods //
-    public String addPlayerItem(String item, int quantity) {
+    public void addPlayerItem(String item, int quantity) {
         inventory.put(item, inventory.getOrDefault(item, 0) + quantity);
-        return "";
     }
-    public String removePlayerItem(String item, int quantity) {
+    public void removePlayerItem(String item, int quantity) {
         if (inventory.containsKey(item)) {
             int currentQuantity = inventory.get(item);
             if (currentQuantity > quantity) {
                 inventory.put(item, currentQuantity - quantity);
-                return "";
             } else {
                 inventory.remove(item);
-                return "";
             }
         } else {
-            return "Item not found in inventory.";
+            io.send("Item not found in inventory.");
         }
     }
     public void clearInventory() {
@@ -99,38 +116,9 @@ public class Player {
     }
 
     // Display Player Details //
-    public String getStats() {
-        return "Player: " + name + "\n" +
+    public void getStats() {
+        send("Player: " + name + "\n" +
                 "Health: " + health + "/" + maxHealth + "\n" +
-                "Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString());
-    }
-
-    // Player Data Handlers //
-    public String toSaveString() {
-        StringBuilder inventoryData = new StringBuilder();
-        for (String item : inventory.keySet()) {
-            inventoryData.append(item).append(":").append(inventory.get(item)).append(",");
-        }
-        String inventoryString = !inventoryData.isEmpty()
-                ? inventoryData.substring(0, inventoryData.length() - 1) : "empty";
-
-        return name + ";" + maxHealth + ";" + health + ";" + inventoryString;
-    }
-    public static Player fromSaveString(String data) {
-        String[] parts = data.split(";");
-        if (parts.length < 4) return null;
-
-        Player player = new Player(parts[0]); // Player name
-        player.setMaxHealth(Integer.parseInt(parts[1]));
-        player.setHealth(Integer.parseInt(parts[2]));
-
-        if (!parts[3].equals("empty")) {
-            String[] items = parts[3].split(",");
-            for (String itemEntry : items) {
-                String[] itemData = itemEntry.split(":");
-                player.addPlayerItem(itemData[0], Integer.parseInt(itemData[1]));
-            }
-        }
-        return player;
+                "Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString()));
     }
 }

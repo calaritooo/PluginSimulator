@@ -7,5 +7,5 @@ public interface Command {
     String getName();
     String getDescription();
     String getUsage();
-    String execute(Player player, String[] args);
+    void execute(Player player, String[] args);
 }

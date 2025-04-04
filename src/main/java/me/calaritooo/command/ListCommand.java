@@ -21,7 +21,7 @@ public class ListCommand implements Command {
     }
 
     @Override
-    public String execute(Player player, String[] args) {
-        return PlayerManager.listPlayersAsString();
+    public void execute(Player player, String[] args) {
+        player.send(PlayerManager.listPlayersAsString());
     }
 }

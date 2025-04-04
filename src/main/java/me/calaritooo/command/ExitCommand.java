@@ -16,8 +16,8 @@ public class ExitCommand implements Command {
         return "Usage: /exit";
     }
 
-    public String execute(Player player, String[] args) {
+    public void execute(Player player, String[] args) {
+        player.send("Exiting the game...");
         System.exit(0);
-        return "Exiting the game...";
     }
 }
