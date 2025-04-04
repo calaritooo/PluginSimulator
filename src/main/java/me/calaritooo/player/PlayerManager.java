@@ -22,7 +22,7 @@ public class PlayerManager {
     public static Player getOrCreate(String playerName) {
         Player player = players.computeIfAbsent(playerName, k -> new Player(playerName));
         EventManager.onEvent(new PlayerJoinEvent(player));
-        return get(playerName);
+        return player;
     }
     public static void add(Player player) {
         players.put(player.getName(), player);
