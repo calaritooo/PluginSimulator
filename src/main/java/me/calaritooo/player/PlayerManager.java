@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import me.calaritooo.event.EventManager;
 import me.calaritooo.event.events.player.*;
-import me.calaritooo.gui.SimulatorIO;
 
 import java.io.*;
 import java.util.Collection;
@@ -15,28 +14,24 @@ public class PlayerManager {
     private static final File PLAYER_FOLDER = new File("players");
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final HashMap<String, Player> players = new HashMap<>();
-    private static SimulatorIO io;
 
     // SIMPLE RETURNS
     public static Player get(String playerName) {
-        return players.get(playerName.toLowerCase());
+        return players.get(playerName);
     }
     public static Player getOrCreate(String playerName) {
-        players.computeIfAbsent(playerName.toLowerCase(), k -> new Player(playerName.toLowerCase(), io));
-        if (get(playerName.toLowerCase()).firstTime) {
-            EventManager.onEvent(new PlayerWelcomeEvent(get(playerName.toLowerCase())));
-        }
-        return get(playerName.toLowerCase());
+        Player player = players.computeIfAbsent(playerName, k -> new Player(playerName));
+        EventManager.onEvent(new PlayerJoinEvent(player));
+        return get(playerName);
     }
     public static void add(Player player) {
-        player.setIO(io);
-        players.put(player.getName().toLowerCase(), player);
+        players.put(player.getName(), player);
     }
-    public static void remove(Player player) { players.remove(player.getName().toLowerCase()); }
+    public static void remove(Player player) { players.remove(player.getName()); }
     public static boolean isEmpty() { return players.isEmpty(); }
     public static Collection<Player> list() { return players.values(); }
     public static void clear() { players.clear(); }
-    public static boolean exists(String playerName) {return players.containsKey(playerName.toLowerCase()); }
+    public static boolean exists(String playerName) {return players.containsKey(playerName); }
 
     public static String listPlayersAsString() {
         if (players.isEmpty()) {
@@ -59,7 +54,7 @@ public class PlayerManager {
             PLAYER_FOLDER.mkdirs();
         }
         for (Player player : players.values()) {
-            File file = new File(PLAYER_FOLDER, player.getName().toLowerCase() + ".json");
+            File file = new File(PLAYER_FOLDER, player.getName() + ".json");
             try (Writer writer = new FileWriter(file)) {
                 GSON.toJson(player, writer);
             } catch (IOException e) {
@@ -73,7 +68,7 @@ public class PlayerManager {
     public static void loadAll() {
         if (!PLAYER_FOLDER.exists()) return;
 
-        File[] files = PLAYER_FOLDER.listFiles((dir, name) -> name.toLowerCase().endsWith(".json"));
+        File[] files = PLAYER_FOLDER.listFiles((dir, name) -> name.endsWith(".json"));
         if (files == null) return;
 
         for (File file : files) {
@@ -88,9 +83,5 @@ public class PlayerManager {
             }
         }
         System.out.println("Player data loaded.");
-    }
-
-    public static void setIO(SimulatorIO newIO) {
-        io = newIO;
     }
 }

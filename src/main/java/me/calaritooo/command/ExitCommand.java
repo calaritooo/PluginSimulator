@@ -1,5 +1,6 @@
 package me.calaritooo.command;
 
+import me.calaritooo.gui.IOProvider;
 import me.calaritooo.player.Player;
 
 public class ExitCommand implements Command {
@@ -17,7 +18,7 @@ public class ExitCommand implements Command {
     }
 
     public void execute(Player player, String[] args) {
-        player.send("Exiting the game...");
+        IOProvider.send("Exiting the game...");
         System.exit(0);
     }
 }

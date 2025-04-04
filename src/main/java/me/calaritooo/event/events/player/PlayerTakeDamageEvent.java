@@ -1,11 +1,13 @@
 package me.calaritooo.event.events.player;
 
+import me.calaritooo.event.Cancelable;
 import me.calaritooo.player.Player;
 
-public class PlayerTakeDamageEvent {
+public class PlayerTakeDamageEvent implements Cancelable {
 
     private final Player player;
     private final int damage;
+    private boolean canceled = false;
 
     public PlayerTakeDamageEvent(Player player, int damage) {
         this.player = player;
@@ -14,4 +16,13 @@ public class PlayerTakeDamageEvent {
 
     public Player getPlayer() { return player; }
     public int getDamage() { return damage; }
+
+    @Override
+    public boolean isCanceled() {
+        return canceled;
+    }
+    @Override
+    public void setCancelled(boolean canceled) {
+        this.canceled = canceled;
+    }
 }

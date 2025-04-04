@@ -1,5 +1,6 @@
 package me.calaritooo.command;
 
+import me.calaritooo.gui.IOProvider;
 import me.calaritooo.player.Player;
 
 public class InvCommand implements Command {
@@ -29,11 +30,11 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.addPlayerItem(item, quantity);
                     if (quantity > 1) {
-                        player.send(quantity + " " + item + "s added to " + player.getName() + "'s inventory.");
+                        IOProvider.send(quantity + " " + item + "s added to " + player.getName() + "'s inventory.");
                     } else {
-                        player.send(quantity + " " + item + " added to " + player.getName() + "'s inventory.");
+                        IOProvider.send(quantity + " " + item + " added to " + player.getName() + "'s inventory.");
                     }
-                } catch (NumberFormatException e) { player.send("Invalid quantity."); }
+                } catch (NumberFormatException e) { IOProvider.send("Invalid quantity."); }
 
             // take //
             } else if (args[1].equalsIgnoreCase("take")) {
@@ -42,23 +43,23 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.removePlayerItem(item, quantity);
                     if (quantity > 1) {
-                        player.send(quantity + " " + item + "s removed from " + player.getName() + "'s inventory.");
+                        IOProvider.send(quantity + " " + item + "s removed from " + player.getName() + "'s inventory.");
                     } else {
-                        player.send(quantity + " " + item + " removed from " + player.getName() + "'s inventory.");
+                        IOProvider.send(quantity + " " + item + " removed from " + player.getName() + "'s inventory.");
                     }
                 } catch (NumberFormatException e) {
-                    player.send("Invalid quantity.");
+                    IOProvider.send("Invalid quantity.");
                 }
-            } else { player.send(getUsage()); }
+            } else { IOProvider.send(getUsage()); }
 
         // clear //
         } else if (args.length == 2 && args[1].equalsIgnoreCase("clear")) {
             player.clearInventory();
-            player.send("Inventory cleared.");
+            IOProvider.send("Inventory cleared.");
 
         // view (no args) //
         } else if (args.length == 1) {
             player.displayInventory();
-        } else { player.send(getUsage()); }
+        } else { IOProvider.send(getUsage()); }
     }
 }

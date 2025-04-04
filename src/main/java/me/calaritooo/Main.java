@@ -2,11 +2,11 @@ package me.calaritooo;
 
 import me.calaritooo.event.EventManager;
 import me.calaritooo.event.listeners.PlayerListener;
+import me.calaritooo.gui.SimulatorGui;
 import me.calaritooo.player.Player;
 import me.calaritooo.player.PlayerManager;
 
 import javax.swing.*;
-import java.io.*;
 
 public class Main {
 

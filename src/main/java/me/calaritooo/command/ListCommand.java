@@ -1,5 +1,6 @@
 package me.calaritooo.command;
 
+import me.calaritooo.gui.IOProvider;
 import me.calaritooo.player.Player;
 import me.calaritooo.player.PlayerManager;
 
@@ -22,6 +23,6 @@ public class ListCommand implements Command {
 
     @Override
     public void execute(Player player, String[] args) {
-        player.send(PlayerManager.listPlayersAsString());
+        IOProvider.send(PlayerManager.listPlayersAsString());
     }
 }

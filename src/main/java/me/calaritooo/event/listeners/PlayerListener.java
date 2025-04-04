@@ -1,22 +1,29 @@
 package me.calaritooo.event.listeners;
 
 import me.calaritooo.command.Command;
+import me.calaritooo.event.EventManager;
 import me.calaritooo.event.Listener;
 import me.calaritooo.event.events.player.*;
+import me.calaritooo.gui.IOProvider;
 import me.calaritooo.player.Player;
 
 public class PlayerListener implements Listener {
 
+    // When listener reached 3 usages, must be moved to own class file!
     @Override
     public void handle(Object event) {
         if (event instanceof PlayerWelcomeEvent welcomeEvent) {
             Player p = welcomeEvent.getPlayer();
-            p.send("[SERVER] Welcome " + p.getName() + "to the game!");
+            IOProvider.send("[SERVER] Welcome " + p.getName() + " to the simulator! Type '/help' to see a list of available commands.");
         }
 
         if (event instanceof PlayerJoinEvent joinEvent) {
             Player p = joinEvent.getPlayer();
-            p.send("[SERVER] Player " + p.getName() + " joined the game!");
+            IOProvider.send("[SERVER] Player " + p.getName() + " joined the game!");
+            if (!p.hasJoinedBefore()) {
+                EventManager.onEvent(new PlayerWelcomeEvent(p));
+                p.setHasJoinedBefore(true);
+            }
         }
 
         if (event instanceof PlayerLeaveEvent leaveEvent) {

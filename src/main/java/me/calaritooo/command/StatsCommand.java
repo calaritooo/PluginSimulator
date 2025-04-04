@@ -1,5 +1,6 @@
 package me.calaritooo.command;
 
+import me.calaritooo.gui.IOProvider;
 import me.calaritooo.player.Player;
 
 public class StatsCommand implements Command {
@@ -37,11 +38,11 @@ public class StatsCommand implements Command {
                     case "health" -> {
                         player.setHealth(value);
                     }
-                    default -> player.send("Unknown stat: " + stat);
+                    default -> IOProvider.send("Unknown stat: " + stat);
                 };
             } catch (NumberFormatException e) {
-                player.send("Invalid value: " + args[1]);
+                IOProvider.send("Invalid value: " + args[1]);
             }
-        } else { player.send(getUsage()); }
+        } else { IOProvider.send(getUsage()); }
     }
 }

@@ -1,11 +1,13 @@
 package me.calaritooo.event.events.player;
 
+import me.calaritooo.event.Cancelable;
 import me.calaritooo.player.Player;
 
-public class PlayerChatEvent {
+public class PlayerChatEvent implements Cancelable {
 
-    public final Player player;
-    public final String message;
+    private final Player player;
+    private final String message;
+    private boolean canceled = false;
 
     public PlayerChatEvent(Player player, String message) {
         this.player = player;
@@ -14,4 +16,14 @@ public class PlayerChatEvent {
 
     public Player getPlayer() { return player; }
     public String getMessage() { return message; }
+
+    @Override
+    public boolean isCanceled() {
+        return canceled;
+    }
+    @Override
+    public void setCancelled(boolean canceled) {
+        this.canceled = canceled;
+    }
+
 }

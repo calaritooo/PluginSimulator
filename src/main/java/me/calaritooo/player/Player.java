@@ -3,48 +3,36 @@ package me.calaritooo.player;
 
 import me.calaritooo.event.EventManager;
 import me.calaritooo.event.events.player.PlayerDeathEvent;
-import me.calaritooo.gui.SimulatorIO;
+import me.calaritooo.gui.IOProvider;
 
 import java.util.HashMap;
 
 public class Player {
 
     // Class fields //
-    private transient SimulatorIO io;
-
     String name;
     int maxHealth;
     int health;
-    boolean firstTime;
+    boolean hasJoinedBefore = false;
     HashMap<String, Integer> inventory;
 
     // Constructors //
-    public Player(String name, SimulatorIO io) {
-        this.io = io;
+    public Player(String name) {
         this.name = name;
         this.maxHealth = 100;
         this.health = 100;
         this.inventory = new HashMap<>();
-        this.firstTime = true;
+        this.hasJoinedBefore = true;
     }
     // For GSON
     public Player() {}
-
-    public void setIO(SimulatorIO io) {
-        this.io = io;
-    }
-
-    // Wrap IO send method
-    public void send(String message) {
-        io.send(message);
-    }
 
     // Getters //
     public String getName() {
         return name;
     }
-    public boolean getFirstTime() {
-        return firstTime;
+    public boolean hasJoinedBefore() {
+        return hasJoinedBefore;
     }
     public int getMaxHealth() {
         return maxHealth;
@@ -58,18 +46,21 @@ public class Player {
     }
 
     public void displayInventory() {
-        io.send(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
+        IOProvider.send(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
     }
 
     // Base Detail Setters //
     public void setName(String name) {
         this.name = name;
     }
+    public void setHasJoinedBefore(boolean hasJoinedBefore) {
+        this.hasJoinedBefore = hasJoinedBefore;
+    }
     public void setHealth(int health) {
         if (health >= 0 && health <= this.maxHealth) {
             this.health = health;
         } else {
-            io.send("Invalid health value. Valid values are 0 to " + maxHealth + ".");
+            IOProvider.send("Invalid health value. Valid values are 0 to " + maxHealth + ".");
         }
     }
     public void setMaxHealth(int maxHealth) {
@@ -80,12 +71,6 @@ public class Player {
     }
 
     // Player actions //
-    public String onJoin(Player player) {
-        return "[SERVER] Player " + getName() + " joined the game!";
-    }
-    public String onChat(Player player, String message) {
-        return "[CHAT] " + getName() + ": " + message;
-    }
     public void heal(int quantity) {
         this.health = Math.min(this.health + quantity, this.maxHealth);
     }
@@ -108,7 +93,7 @@ public class Player {
                 inventory.remove(item);
             }
         } else {
-            io.send("Item not found in inventory.");
+            IOProvider.send("Item not found in inventory.");
         }
     }
     public void clearInventory() {
@@ -117,7 +102,7 @@ public class Player {
 
     // Display Player Details //
     public void getStats() {
-        send("Player: " + name + "\n" +
+        IOProvider.send("Player: " + name + "\n" +
                 "Health: " + health + "/" + maxHealth + "\n" +
                 "Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString()));
     }

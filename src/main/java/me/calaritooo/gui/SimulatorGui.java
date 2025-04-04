@@ -1,7 +1,9 @@
-package me.calaritooo;
+package me.calaritooo.gui;
 
 import me.calaritooo.command.CommandHandler;
-import me.calaritooo.gui.SimulatorIO;
+import me.calaritooo.event.EventManager;
+import me.calaritooo.event.events.player.PlayerChatEvent;
+import me.calaritooo.event.events.player.PlayerJoinEvent;
 import me.calaritooo.player.Player;
 
 import javax.swing.*;
@@ -16,8 +18,10 @@ public class SimulatorGui implements SimulatorIO {
     private final CommandHandler commandHandler = new CommandHandler();
 
     public SimulatorGui(Player player) {
+        IOProvider.set(this);
         this.player = player;
         createGUI();
+        EventManager.onEvent(new PlayerJoinEvent(player));
     }
 
     // GUI layout
@@ -37,7 +41,6 @@ public class SimulatorGui implements SimulatorIO {
         frame.getContentPane().add(inputField, BorderLayout.SOUTH);
 
         frame.setVisible(true);
-        send(player.onJoin(player));
     }
 
     // Message output
@@ -52,7 +55,8 @@ public class SimulatorGui implements SimulatorIO {
             send("> " + input);
             handleCommand(input);
         } else {
-            send(player.onChat(player, input));
+            send("[CHAT] " + player.getName() + ": " + input);
+            EventManager.onEvent(new PlayerChatEvent(player, input));
         }
     }
 
