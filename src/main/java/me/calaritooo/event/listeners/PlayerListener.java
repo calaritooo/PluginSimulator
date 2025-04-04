@@ -1,10 +1,9 @@
 package me.calaritooo.event.listeners;
 
-import me.calaritooo.command.Command;
 import me.calaritooo.event.EventManager;
 import me.calaritooo.event.Listener;
 import me.calaritooo.event.events.player.*;
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 public class PlayerListener implements Listener {
@@ -14,12 +13,12 @@ public class PlayerListener implements Listener {
     public void handle(Object event) {
         if (event instanceof PlayerWelcomeEvent welcomeEvent) {
             Player p = welcomeEvent.getPlayer();
-            IOProvider.send("[SERVER] Welcome " + p.getName() + " to the simulator! Type '/help' to see a list of available commands.");
+            MessageBus.send("[SERVER] Welcome " + p.getName() + " to the engine! Type '/help' to see a list of available commands.");
         }
 
         if (event instanceof PlayerJoinEvent joinEvent) {
             Player p = joinEvent.getPlayer();
-            IOProvider.send("[SERVER] Player " + p.getName() + " joined the game!");
+            MessageBus.send("[SERVER] Player " + p.getName() + " has joined the engine!");
             if (!p.hasJoinedBefore()) {
                 EventManager.onEvent(new PlayerWelcomeEvent(p));
                 p.setHasJoinedBefore(true);
@@ -37,7 +36,7 @@ public class PlayerListener implements Listener {
 
         if (event instanceof PlayerCommandEvent commandEvent) {
             Player p = commandEvent.getPlayer();
-            Command c = commandEvent.getCommand();
+            String c = commandEvent.getCommand();
         }
 
         if (event instanceof PlayerSpawnEvent spawnEvent) {

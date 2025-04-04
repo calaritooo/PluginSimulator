@@ -12,10 +12,6 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Register listeners
-        EventManager.registerListener(new PlayerListener());
-        System.out.println("Event listeners successfully registered");
-
         // Load existing players
         PlayerManager.loadAll();
 
@@ -32,5 +28,8 @@ public class Main {
         // Start GUI on EDT
         SwingUtilities.invokeLater(() -> new SimulatorGui(player));
 
+        // Register listeners
+        EventManager.registerListener(new PlayerListener());
+        System.out.println("Event listeners successfully registered");
     }
 }

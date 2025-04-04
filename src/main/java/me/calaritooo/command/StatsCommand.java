@@ -1,6 +1,6 @@
 package me.calaritooo.command;
 
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 public class StatsCommand implements Command {
@@ -32,17 +32,15 @@ public class StatsCommand implements Command {
                 String stat = args[1];
                 int value = Integer.parseInt(args[3]);
                 switch (stat) {
-                    case "max_health" -> {
+                    case "max_health":
                         player.setMaxHealth(value);
-                    }
-                    case "health" -> {
+                    case "health":
                         player.setHealth(value);
-                    }
-                    default -> IOProvider.send("Unknown stat: " + stat);
-                };
+                    default: MessageBus.send("Unknown stat: " + stat);
+                }
             } catch (NumberFormatException e) {
-                IOProvider.send("Invalid value: " + args[1]);
+                MessageBus.send("Invalid value: " + args[1]);
             }
-        } else { IOProvider.send(getUsage()); }
+        } else { MessageBus.send(getUsage()); }
     }
 }

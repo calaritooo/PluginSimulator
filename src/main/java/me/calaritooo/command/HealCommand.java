@@ -1,6 +1,6 @@
 package me.calaritooo.command;
 
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 public class HealCommand implements Command {
@@ -24,6 +24,6 @@ public class HealCommand implements Command {
     public void execute(Player player, String[] args) {
         if (args.length == 2) {
             player.heal(Integer.parseInt(args[1]));
-        } else { IOProvider.send(getUsage()); }
+        } else { MessageBus.send(getUsage()); }
     }
 }

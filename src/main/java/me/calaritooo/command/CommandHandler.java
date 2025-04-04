@@ -1,6 +1,6 @@
 package me.calaritooo.command;
 
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 import java.util.*;
@@ -26,14 +26,13 @@ public class CommandHandler {
         String commandName = args[0].toLowerCase();
         Command command = commandMap.get(commandName.toLowerCase());
         if (command != null) {
-            IOProvider.send("\n");
             command.execute(player, args);
         } else {
-            IOProvider.send("Unknown command: " + args[0]);
+            MessageBus.send("Unknown command: " + args[0]);
         }
     }
 
-    public void getHelp(Player player) {
+    public void getHelp() {
         StringBuilder help = new StringBuilder("\nAvailable commands:\n");
 
         List<Command> sortedCommands = new ArrayList<>(commandMap.values());
@@ -43,6 +42,6 @@ public class CommandHandler {
             help.append(command.getName()).append(" - ").append(command.getDescription()).append("\n   - ")
                     .append(command.getUsage()).append("\n");
         }
-        IOProvider.send(help.toString());
+        MessageBus.send(help.toString());
     }
 }

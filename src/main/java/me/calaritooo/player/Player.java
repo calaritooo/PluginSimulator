@@ -3,7 +3,7 @@ package me.calaritooo.player;
 
 import me.calaritooo.event.EventManager;
 import me.calaritooo.event.events.player.PlayerDeathEvent;
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 
 import java.util.HashMap;
 
@@ -13,7 +13,7 @@ public class Player {
     String name;
     int maxHealth;
     int health;
-    boolean hasJoinedBefore = false;
+    boolean hasJoinedBefore;
     HashMap<String, Integer> inventory;
 
     // Constructors //
@@ -22,7 +22,7 @@ public class Player {
         this.maxHealth = 100;
         this.health = 100;
         this.inventory = new HashMap<>();
-        this.hasJoinedBefore = true;
+        this.hasJoinedBefore = false;
     }
     // For GSON
     public Player() {}
@@ -46,7 +46,7 @@ public class Player {
     }
 
     public void displayInventory() {
-        IOProvider.send(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
+        MessageBus.send(getName() + "'s inventory: " + (inventory.isEmpty() ? "empty" : inventory.toString()));
     }
 
     // Base Detail Setters //
@@ -60,7 +60,7 @@ public class Player {
         if (health >= 0 && health <= this.maxHealth) {
             this.health = health;
         } else {
-            IOProvider.send("Invalid health value. Valid values are 0 to " + maxHealth + ".");
+            MessageBus.send("Invalid health value. Valid values are 0 to " + maxHealth + ".");
         }
     }
     public void setMaxHealth(int maxHealth) {
@@ -93,7 +93,7 @@ public class Player {
                 inventory.remove(item);
             }
         } else {
-            IOProvider.send("Item not found in inventory.");
+            MessageBus.send("Item not found in inventory.");
         }
     }
     public void clearInventory() {
@@ -102,7 +102,7 @@ public class Player {
 
     // Display Player Details //
     public void getStats() {
-        IOProvider.send("Player: " + name + "\n" +
+        MessageBus.send("Player: " + name + "\n" +
                 "Health: " + health + "/" + maxHealth + "\n" +
                 "Inventory: " + (inventory.isEmpty() ? "N/A" : inventory.toString()));
     }

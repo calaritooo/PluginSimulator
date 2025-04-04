@@ -1,22 +1,21 @@
 package me.calaritooo.event.events.player;
 
-import me.calaritooo.command.Command;
 import me.calaritooo.event.Cancelable;
 import me.calaritooo.player.Player;
 
 public class PlayerCommandEvent implements Cancelable {
 
     private final Player player;
-    private final Command command;
+    private final String command;
     private boolean canceled = false;
 
-    public PlayerCommandEvent(Player player, Command command) {
+    public PlayerCommandEvent(Player player, String command) {
         this.player = player;
         this.command = command;
     }
 
     public Player getPlayer() { return player; }
-    public Command getCommand() { return command; }
+    public String getCommand() { return command; }
 
     @Override
     public boolean isCanceled() {

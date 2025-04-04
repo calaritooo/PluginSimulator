@@ -1,6 +1,6 @@
 package me.calaritooo.command;
 
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 public class InvCommand implements Command {
@@ -30,11 +30,11 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.addPlayerItem(item, quantity);
                     if (quantity > 1) {
-                        IOProvider.send(quantity + " " + item + "s added to " + player.getName() + "'s inventory.");
+                        MessageBus.send(quantity + " " + item + "s added to " + player.getName() + "'s inventory.");
                     } else {
-                        IOProvider.send(quantity + " " + item + " added to " + player.getName() + "'s inventory.");
+                        MessageBus.send(quantity + " " + item + " added to " + player.getName() + "'s inventory.");
                     }
-                } catch (NumberFormatException e) { IOProvider.send("Invalid quantity."); }
+                } catch (NumberFormatException e) { MessageBus.send("Invalid quantity."); }
 
             // take //
             } else if (args[1].equalsIgnoreCase("take")) {
@@ -43,23 +43,23 @@ public class InvCommand implements Command {
                     int quantity = Integer.parseInt(args[3]);
                     player.removePlayerItem(item, quantity);
                     if (quantity > 1) {
-                        IOProvider.send(quantity + " " + item + "s removed from " + player.getName() + "'s inventory.");
+                        MessageBus.send(quantity + " " + item + "s removed from " + player.getName() + "'s inventory.");
                     } else {
-                        IOProvider.send(quantity + " " + item + " removed from " + player.getName() + "'s inventory.");
+                        MessageBus.send(quantity + " " + item + " removed from " + player.getName() + "'s inventory.");
                     }
                 } catch (NumberFormatException e) {
-                    IOProvider.send("Invalid quantity.");
+                    MessageBus.send("Invalid quantity.");
                 }
-            } else { IOProvider.send(getUsage()); }
+            } else { MessageBus.send(getUsage()); }
 
         // clear //
         } else if (args.length == 2 && args[1].equalsIgnoreCase("clear")) {
             player.clearInventory();
-            IOProvider.send("Inventory cleared.");
+            MessageBus.send("Inventory cleared.");
 
         // view (no args) //
         } else if (args.length == 1) {
             player.displayInventory();
-        } else { IOProvider.send(getUsage()); }
+        } else { MessageBus.send(getUsage()); }
     }
 }

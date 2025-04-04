@@ -1,6 +1,6 @@
 package me.calaritooo.command;
 
-import me.calaritooo.gui.IOProvider;
+import me.calaritooo.util.MessageBus;
 import me.calaritooo.player.Player;
 
 public class ExitCommand implements Command {
@@ -10,7 +10,7 @@ public class ExitCommand implements Command {
     }
 
     public String getDescription() {
-        return "Exit the game";
+        return "Exit the engine";
     }
 
     public String getUsage() {
@@ -18,7 +18,7 @@ public class ExitCommand implements Command {
     }
 
     public void execute(Player player, String[] args) {
-        IOProvider.send("Exiting the game...");
+        MessageBus.send("Exiting the engine...");
         System.exit(0);
     }
 }
